@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  books        Book[]
+}
+
+model Book {
+  id           String        @id @default(uuid())
+  readerId     String
+  reader       User          @relation(fields: [readerId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  title        String
+  author       String
+  ISBN         String?
+  pageCount    Int
+  currentPage  Int
+  mode         String
+  rateGoal     Int?
+  startDate    DateTime
+  targetDate   DateTime
+  archivedAt   DateTime?
+  completedAt  DateTime?
+  deletedAt    DateTime?
+  coverUrl     String?
+  dailyTargets DailyTarget[]
+}
+
+model DailyTarget {
+  id                   String   @id @default(uuid())
+  bookId               String
+  targetPage           Int
+  calcTime             DateTime
+  book                 Book?    @relation(fields: [bookId], references: [id])
+  snapshot_pageCount   Int
+  snapshot_currentPage Int
+  snapshot_targetDate  DateTime
+  snapshot_rateGoal    Int?
+  snapshot_mode        String
+}

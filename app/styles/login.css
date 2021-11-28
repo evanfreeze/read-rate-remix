@@ -1,0 +1,16 @@
+.login-container {
+    max-width: 600px;
+    margin: 24px auto;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-type {
+    display: flex;
+    justify-content: space-evenly;
+    border: none;
+}
