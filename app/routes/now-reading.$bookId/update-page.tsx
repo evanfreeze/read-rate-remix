@@ -1,5 +1,5 @@
 import { Book } from ".prisma/client";
-import { LinksFunction, ActionFunction, redirect, LoaderFunction, useLoaderData } from "remix";
+import { ActionFunction, redirect, LoaderFunction, useLoaderData } from "remix";
 import FormContainer from "~/components/FormContainer";
 import { FormInput } from "~/components/FormInput";
 import FormLabel from "~/components/FormLabel";

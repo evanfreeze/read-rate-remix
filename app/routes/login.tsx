@@ -1,4 +1,4 @@
-import { ActionFunction, useActionData, useSearchParams, LinksFunction } from "remix";
+import { ActionFunction, useActionData, useSearchParams } from "remix";
 import FormContainer from "~/components/FormContainer";
 import FormErrorMessage from "~/components/FormErrorMessage";
 import { FormInput } from "~/components/FormInput";

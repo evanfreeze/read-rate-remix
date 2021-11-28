@@ -2,7 +2,6 @@ import { Book, DailyTarget } from ".prisma/client";
 import { Outlet, Link, LoaderFunction, useLoaderData } from "remix";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
-import { differenceInCalendarDays, isToday } from "date-fns";
 import { BookOpenIcon } from "@heroicons/react/outline";
 import { ArchiveIcon } from "@heroicons/react/outline";
 import CircleProgress from "~/components/CircleProgress";
