@@ -127,8 +127,6 @@ function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData<LoaderData>();
     const location = useLocation();
 
-    console.log("location...", location);
-
     return (
         <div id="remix-app" className="max-w-screen-lg mx-auto px-6 py-10 h-full">
             {location.pathname == "/" ? null : (

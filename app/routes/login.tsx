@@ -39,8 +39,6 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
     const password = form.get("password");
     const redirectTo = form.get("redirectTo");
 
-    console.log(form.get("loginType"));
-
     if (
         typeof loginType !== "string" ||
         typeof email !== "string" ||
@@ -94,8 +92,8 @@ export default function LoginPage() {
 
     return (
         <FormContainer className="max-w-lg mx-auto my-12">
-            <h2 className="text-2xl text-gray-900 font-bold text-center">Login or Sign Up</h2>
-            <hr className="my-5" />
+            <h2 className="text-2xl font-bold text-center">Login or Sign Up</h2>
+            <hr className="my-5 dark:border-gray-600" />
             <form
                 method="post"
                 className="login-form"
