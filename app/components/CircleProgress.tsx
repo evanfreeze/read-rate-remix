@@ -38,6 +38,7 @@ export default function CircleProgress({
                     style={{
                         strokeDasharray: circ,
                         strokeDashoffset: circ * position,
+                        strokeLinecap: "round",
                     }}
                 />
             </svg>
