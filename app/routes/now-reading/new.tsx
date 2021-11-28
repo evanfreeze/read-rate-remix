@@ -1,5 +1,5 @@
 import { ActionFunction, LoaderFunction, redirect } from "remix";
-import { db } from "~/utils/db.server";
+import { prisma } from "~/utils/db.server";
 import { getUser, getUserId, requireUserId } from "~/utils/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -99,7 +99,7 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
         };
     }
 
-    const book = await db.book.create({
+    const book = await prisma.book.create({
         data: {
             title,
             author,

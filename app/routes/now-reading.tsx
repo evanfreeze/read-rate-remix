@@ -1,6 +1,6 @@
 import { Book, DailyTarget } from ".prisma/client";
 import { Outlet, Link, LoaderFunction, useLoaderData } from "remix";
-import { db } from "~/utils/db.server";
+import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 import { differenceInCalendarDays, isToday } from "date-fns";
 import AddNewBook from "./now-reading/new";
@@ -22,7 +22,7 @@ function calcaulateTargetPage(book: Book): number {
 
 export const loader: LoaderFunction = async ({ request }) => {
     const userId = await requireUserId(request, "/now-reading");
-    const books = await db.book.findMany({
+    const books = await prisma.book.findMany({
         where: { readerId: userId },
         include: {
             dailyTargets: {
@@ -42,7 +42,7 @@ export const loader: LoaderFunction = async ({ request }) => {
             !isToday(book.dailyTargets[0].calcTime) ||
             String(book.targetDate) !== String(book.dailyTargets[0].snapshot_targetDate)
         ) {
-            const newTarget = await db.dailyTarget.create({
+            const newTarget = await prisma.dailyTarget.create({
                 data: {
                     calcTime: new Date(),
                     bookId: book.id,

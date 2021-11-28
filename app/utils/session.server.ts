@@ -1,6 +1,6 @@
 import bycrypt from "bcrypt";
 import { createCookieSessionStorage, redirect } from "remix";
-import { db } from "./db.server";
+import { prisma } from "./db.server";
 
 type LoginForm = {
     email: string;
@@ -15,13 +15,13 @@ type SignUpForm = {
 
 export async function signUp({ email, password, firstName }: SignUpForm) {
     const passwordHash = await bycrypt.hash(password, 10);
-    return db.user.create({
+    return prisma.user.create({
         data: { email, passwordHash, firstName },
     });
 }
 
 export async function login({ email, password }: LoginForm) {
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: { email },
     });
 
@@ -92,7 +92,7 @@ export async function getUser(request: Request) {
     }
 
     try {
-        const user = await db.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: userId },
         });
         return user;
