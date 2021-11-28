@@ -21,7 +21,6 @@ export default function Profile() {
             <h1>Profile</h1>
             {data.user ? (
                 <div>
-                    <h2>{data.user.firstName}</h2>
                     <p>{data.user.email}</p>
                     <p>Joined {formatDistance(new Date(data.user.createdAt), new Date(), { addSuffix: true })}</p>
                     <form action="/logout" method="post">

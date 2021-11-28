@@ -16,7 +16,6 @@ model User {
   updatedAt    DateTime @updatedAt
   email        String   @unique
   passwordHash String
-  firstName    String
   books        Book[]
 }
 

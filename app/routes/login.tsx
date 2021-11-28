@@ -25,16 +25,9 @@ function validatePassword(password: unknown) {
     }
 }
 
-function validateFirstName(firstName: unknown) {
-    if (typeof firstName !== "string" || firstName.trim().length <= 0) {
-        return "First name can't be empty";
-    }
-}
-
 type ActionData = {
     formError?: string;
     fieldErrors?: {
-        firstName?: string | undefined;
         email: string | undefined;
         password: string | undefined;
     };
@@ -42,21 +35,20 @@ type ActionData = {
         loginType: string;
         email: string;
         password: string;
-        firstName?: string;
     };
 };
 
 export const action: ActionFunction = async ({ request }): Promise<Response | ActionData> => {
     const form = await request.formData();
-    const loginType = form.get("loginType") === "1" ? "login" : "signUp";
-    const firstName = form.get("firstName") ?? "";
+    const loginType = form.get("loginType");
     const email = form.get("email");
     const password = form.get("password");
     const redirectTo = form.get("redirectTo");
 
+    console.log(form.get("loginType"));
+
     if (
         typeof loginType !== "string" ||
-        typeof firstName !== "string" ||
         typeof email !== "string" ||
         typeof password !== "string" ||
         typeof redirectTo !== "string"
@@ -64,12 +56,11 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
         return { formError: "Form submitted incorrectly. All values must be strings" };
     }
 
-    const fields = { loginType, email, password, firstName, redirectTo };
+    const fields = { loginType, email, password, redirectTo };
 
     const fieldErrors = {
         email: validateEmail(email),
         password: validatePassword(password),
-        firstName: loginType === "signUp" ? validateFirstName(firstName) : undefined,
     };
 
     if (Object.values(fieldErrors).some(Boolean)) {
@@ -88,7 +79,7 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
             return createUserSession(user.id, redirectTo);
         }
         case "signUp": {
-            const user = await signUp({ email, password, firstName });
+            const user = await signUp({ email, password });
             if (!user) {
                 return {
                     fields,
@@ -106,7 +97,6 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
 export default function LoginPage() {
     const actionData = useActionData<ActionData | undefined>();
     const [searchParams] = useSearchParams();
-    const [signUpSelected, setSignUpSelected] = useState(actionData?.fields?.loginType === "signUp");
 
     return (
         <div className="login-container">
@@ -119,37 +109,24 @@ export default function LoginPage() {
                 <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") ?? "/now-reading"} />
                 <fieldset className="login-type">
                     <label>
-                        <input type="radio" name="loginType" value="login" defaultChecked={!signUpSelected} /> Login
+                        <input
+                            type="radio"
+                            name="loginType"
+                            value="login"
+                            defaultChecked={!actionData?.fields?.loginType || actionData.fields.loginType === "login"}
+                        />{" "}
+                        Login
                     </label>
                     <label>
                         <input
                             type="radio"
                             name="loginType"
                             value="signUp"
-                            defaultChecked={signUpSelected}
-                            onChange={() => setSignUpSelected(true)}
+                            defaultChecked={actionData?.fields?.loginType === "signUp"}
                         />{" "}
                         Sign Up
                     </label>
                 </fieldset>
-                {signUpSelected ? (
-                    <div className="form-input">
-                        <label htmlFor="firstName-input">First Name</label>
-                        <input
-                            type="text"
-                            name="firstName"
-                            id="firstName-input"
-                            defaultValue={actionData?.fields?.firstName ?? ""}
-                            aria-invalid={Boolean(actionData?.fieldErrors?.firstName)}
-                            aria-describedby={actionData?.fieldErrors?.firstName ? "firstName-error" : undefined}
-                        />
-                        {actionData?.fieldErrors?.firstName ? (
-                            <p className="error-message" role="alert" id="firstName-error">
-                                {actionData?.fieldErrors?.firstName}
-                            </p>
-                        ) : null}
-                    </div>
-                ) : null}
                 <div className="form-input">
                     <label htmlFor="email-input">Email</label>
                     <input

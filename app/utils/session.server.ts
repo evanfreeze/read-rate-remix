@@ -10,13 +10,12 @@ type LoginForm = {
 type SignUpForm = {
     email: string;
     password: string;
-    firstName: string;
 };
 
-export async function signUp({ email, password, firstName }: SignUpForm) {
+export async function signUp({ email, password }: SignUpForm) {
     const passwordHash = await bycrypt.hash(password, 10);
     return prisma.user.create({
-        data: { email, passwordHash, firstName },
+        data: { email, passwordHash },
     });
 }
 
