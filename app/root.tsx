@@ -126,8 +126,8 @@ function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData<LoaderData>();
     return (
         <div id="remix-app" className="max-w-screen-lg mx-auto px-6 py-10">
-            <header className="sticky top-5 bg-white z-10">
-                <div className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center">
+            <header className="sticky top-0 bg-white z-10">
+                <div className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center pt-5">
                     <div className="flex gap-3 items-center">
                         <img className="rounded-lg" src="/icon.png" width="48" height="48" />
                         <Link to="/" title="Read Rate">
@@ -154,7 +154,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                 <hr className="my-6 text-gray-200" />
             </header>
             <div className="mb-10">{children}</div>
-            <footer className="text-center">
+            <footer className="text-center fixed bottom-0 pb-4 pt-2 bg-white left-0 right-0">
                 <p className="text-gray-400">
                     &copy; 2020–{new Date().getFullYear()} •{" "}
                     <a className="hover:underline hover:text-blue-500" href="https://www.evanfreeze.com">

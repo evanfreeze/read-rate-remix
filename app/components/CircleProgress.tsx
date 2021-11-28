@@ -3,12 +3,14 @@ const strokeWidth = 7;
 const radius = diameter / 2 - strokeWidth / 2;
 const circ = 2 * Math.PI * radius;
 
+export type HSLColor = { h: string; s: string; l: string };
+
 export default function CircleProgress({
     color,
     progress,
     children,
 }: {
-    color: { h: string; s: string; l: string };
+    color: HSLColor;
     progress: number;
     children?: React.ReactNode;
 }) {

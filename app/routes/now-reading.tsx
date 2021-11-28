@@ -6,8 +6,9 @@ import { differenceInCalendarDays, isToday } from "date-fns";
 import { BookOpenIcon } from "@heroicons/react/outline";
 import { ArchiveIcon } from "@heroicons/react/outline";
 import CircleProgress from "~/components/CircleProgress";
+import { getStatusDetails } from "~/utils/book";
 
-interface BookWithTarget extends Book {
+export interface BookWithTarget extends Book {
     dailyTargets: DailyTarget[];
 }
 
@@ -95,33 +96,23 @@ export default function NowReading() {
     );
 }
 
-function BookRow({ book }: { book: BookWithTarget }) {
+export function BookRow({ book }: { book: BookWithTarget }) {
     const percentComplete = book.currentPage / book.pageCount;
     const targetPage = book.dailyTargets[0].targetPage;
     const pagesRemaining = Math.max(0, targetPage - book.currentPage);
 
-    const getText = () => {
-        if (book.currentPage === book.pageCount) {
-            return "You've completed the book — congrats!";
-        }
-        if (book.currentPage < targetPage) {
-            return `Read to page ${targetPage} to stay on track`;
-        }
-        return "You've read enough today";
-    };
-
     return (
-        <div className="bg-gray-100 rounded-3xl p-7 flex gap-7 items-center">
+        <Link to={`${book.id}`} className="bg-gray-100 rounded-3xl p-7 flex gap-7 items-center">
             <figure className="w-20 h-20">
-                <CircleProgress color={{ h: "217deg", s: "91.2%", l: "59.8%" }} progress={percentComplete}>
-                    <span>{pagesRemaining}</span>
+                <CircleProgress color={getStatusDetails(book)[1]} progress={percentComplete}>
+                    {getStatusDetails(book)[2]}
                 </CircleProgress>
             </figure>
             <div>
                 <h2 className="text-2xl font-bold text-gray-800">{book.title}</h2>
                 <h3 className="text-lg font-semibold text-gray-600">{book.author}</h3>
-                <p className="text-sm text-gray-500 mt-1.5">{getText()}</p>
+                <p className="text-sm text-gray-500 mt-1.5">{getStatusDetails(book)[0]}</p>
             </div>
-        </div>
+        </Link>
     );
 }
