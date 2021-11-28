@@ -12,7 +12,8 @@ export default function CircleProgress({
     progress: number;
     children?: React.ReactNode;
 }) {
-    const position = Math.max(1 - progress, 0);
+    // Math.max(progress, 0.01) makes sure it's always at least 1% complete so we get a dot on the circle
+    const position = Math.max(1 - Math.max(progress, 0.01), 0);
 
     return (
         <div className="flex items-center justify-center">
