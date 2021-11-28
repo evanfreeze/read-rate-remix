@@ -78,18 +78,18 @@ export default function NowReading() {
                     </>
                 )}
             </div>
-            <div className="absolute  bottom-20 left-0 right-0 flex justify-center gap-3">
+            <div>
+                <Outlet />
+            </div>
+            <div className="flex justify-center gap-3 mt-10">
                 <button className="bg-gray-100 hover:bg-gray-200 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 hover:text-black font-bold">
                     <ArchiveIcon className="w-5 h-5 text-blue-500" />
-                    <Link to="new">Archived Books</Link>
+                    <Link to="/archive">Archived Books</Link>
                 </button>
                 <button className="bg-gray-100 hover:bg-gray-200 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 hover:text-black font-bold">
                     <BookOpenIcon className="w-5 h-5 text-blue-500" />
                     <Link to="new">Add Book</Link>
                 </button>
-            </div>
-            <div>
-                <Outlet />
             </div>
         </main>
     );

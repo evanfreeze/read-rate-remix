@@ -1,0 +1,57 @@
+.form-container {
+    background-color: rgb(243, 244, 246);
+    padding: 2rem 2.5rem;
+    border-radius: 0.5rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.form-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-label,
+.form-input label {
+    font-weight: 600; 
+    color: rgb(55, 65, 81);
+}
+
+.form-input input[type="text"],
+.form-input input[type="email"],
+.form-input input[type="password"],
+.form-input input[type="date"] {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border-width: 1px;
+}
+
+.submit-button {
+    border-width: 1px;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: rgb(229, 231, 235);
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    color: rgb(55, 65, 81);
+    border-radius: 0.75rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.submit-button:hover {
+    background-color: rgb(59, 130, 246);
+    color: rgb(255, 255, 255);
+}
+
+
+
+/*
+border w-full py-2 bg-gray-200 text-lg font-bold text-gray-700 mt-3 rounded-xl hover:bg-blue-500 hover:text-white transition-all duration-150
+*/

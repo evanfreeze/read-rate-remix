@@ -153,16 +153,14 @@ function Layout({ children }: { children: React.ReactNode }) {
                 </div>
                 <hr className="my-6 text-gray-200" />
             </header>
-            <div>{children}</div>
-            <footer>
-                <div className="absolute bottom-8 left-0 right-0 text-center">
-                    <p className="text-gray-400">
-                        &copy; 2020–{new Date().getFullYear()} •{" "}
-                        <a className="hover:underline hover:text-blue-500" href="https://www.evanfreeze.com">
-                            Evan Freeze
-                        </a>
-                    </p>
-                </div>
+            <div className="mb-10">{children}</div>
+            <footer className="text-center">
+                <p className="text-gray-400">
+                    &copy; 2020–{new Date().getFullYear()} •{" "}
+                    <a className="hover:underline hover:text-blue-500" href="https://www.evanfreeze.com">
+                        Evan Freeze
+                    </a>
+                </p>
             </footer>
         </div>
     );

@@ -1,6 +1,17 @@
-import { ActionFunction, LoaderFunction, redirect } from "remix";
+import { ActionFunction, LoaderFunction, LinksFunction, redirect } from "remix";
 import { prisma } from "~/utils/db.server";
-import { getUser, getUserId, requireUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
+
+import formStylesUrl from "../../styles/forms.css";
+
+export const links: LinksFunction = () => {
+    return [
+        {
+            rel: "stylesheet",
+            href: formStylesUrl,
+        },
+    ];
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
     await requireUserId(request, "/now-reading/new");
@@ -124,11 +135,11 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
 
 export default function AddNewBook() {
     return (
-        <>
-            <h2>Add a book</h2>
+        <div className="max-w-lg mx-auto form-container">
+            <h2 className="text-2xl font-bold">Add a Book</h2>
             <form method="post">
                 <div className="form-input">
-                    <label htmlFor="title-input">What's the title of the book?</label>
+                    <label htmlFor="title-input">What's the title?</label>
                     <input id="title-input" name="title" type="text" />
                 </div>
                 <div className="form-input">
@@ -140,15 +151,17 @@ export default function AddNewBook() {
                     <input id="pageCount-input" name="pageCount" type="text" />
                 </div>
                 <div className="form-input">
-                    <label htmlFor="currentPage-input">On which page are you starting?</label>
+                    <label htmlFor="currentPage-input">Which page are you starting on?</label>
                     <input id="currentPage-input" name="currentPage" type="text" />
                 </div>
                 <div className="form-input">
-                    <label htmlFor="targetDate-input">By which date do you want to finish?</label>
+                    <label htmlFor="targetDate-input">When do you want to finish?</label>
                     <input id="targetDate-input" name="targetDate" type="date" />
                 </div>
-                <button type="submit">Add Book</button>
+                <button type="submit" className="submit-button mt-3">
+                    Add Book
+                </button>
             </form>
-        </>
+        </div>
     );
 }

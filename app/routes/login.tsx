@@ -1,6 +1,16 @@
-import { UserIcon } from "@heroicons/react/outline";
-import { ActionFunction, useActionData, useSearchParams } from "remix";
+import { ActionFunction, useActionData, useSearchParams, LinksFunction } from "remix";
 import { createUserSession, login, signUp } from "~/utils/session.server";
+
+import formStylesUrl from "../styles/forms.css";
+
+export const links: LinksFunction = () => {
+    return [
+        {
+            rel: "stylesheet",
+            href: formStylesUrl,
+        },
+    ];
+};
 
 function validateEmail(email: unknown) {
     if (typeof email !== "string" || email.trim().length < 4) {
@@ -88,7 +98,7 @@ export default function LoginPage() {
     const [searchParams] = useSearchParams();
 
     return (
-        <div className="max-w-lg mx-auto bg-gray-100 py-8 px-10 rounded-lg my-12">
+        <div className="max-w-lg mx-auto form-container">
             <h2 className="text-2xl text-gray-900 font-bold text-center">Login or Sign Up</h2>
             <hr className="my-5" />
             <form
@@ -99,7 +109,7 @@ export default function LoginPage() {
                 <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") ?? "/now-reading"} />
                 <fieldset className="flex gap-8 justify-center my-3">
                     <legend className="sr-only">Login or Sign Up?</legend>
-                    <label className="font-semibold text-gray-700">
+                    <label className="form-label">
                         <input
                             type="radio"
                             name="loginType"
@@ -108,7 +118,7 @@ export default function LoginPage() {
                         />{" "}
                         Login
                     </label>
-                    <label className="font-semibold text-gray-700">
+                    <label className="form-label">
                         <input
                             type="radio"
                             name="loginType"
@@ -118,12 +128,11 @@ export default function LoginPage() {
                         Sign Up
                     </label>
                 </fieldset>
-                <div className="flex flex-col gap-1 my-4">
+                <div className="form-input">
                     <label className="font-semibold" htmlFor="email-input">
                         Email
                     </label>
                     <input
-                        className="p-2 rounded-md border"
                         type="email"
                         name="email"
                         id="email-input"
@@ -137,12 +146,9 @@ export default function LoginPage() {
                         </p>
                     ) : null}
                 </div>
-                <div className="flex flex-col gap-1 my-4">
-                    <label className="font-semibold" htmlFor="password-input">
-                        Password
-                    </label>
+                <div className="form-input">
+                    <label htmlFor="password-input">Password</label>
                     <input
-                        className="p-2 rounded-md border"
                         type="password"
                         name="password"
                         id="password-input"
