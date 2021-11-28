@@ -1,18 +1,12 @@
 import { Book } from ".prisma/client";
 import { LinksFunction, ActionFunction, redirect, LoaderFunction, useLoaderData } from "remix";
+import FormContainer from "~/components/FormContainer";
+import { FormInput } from "~/components/FormInput";
+import FormLabel from "~/components/FormLabel";
+import FormLabeledInput from "~/components/FormLabeledInput";
+import FormSubmitButton from "~/components/FormSubmitButton";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
-
-import formStyles from "../../styles/forms.css";
-
-export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "stylesheet",
-            href: formStyles,
-        },
-    ];
-};
 
 type LoaderData = {
     book: Book;
@@ -56,15 +50,20 @@ export default function UpdateCurrentPage() {
     const data = useLoaderData<LoaderData | undefined>();
 
     return (
-        <form method="post" className="form-container">
-            <h2 className="text-xl font-bold">Update Your Progress</h2>
-            <div className="form-input">
-                <label htmlFor="currentPage-input">Which page are you on?</label>
-                <input type="text" name="currentPage" id="currentPage-input" defaultValue={data?.book.currentPage} />
-            </div>
-            <button type="submit" className="submit-button mt-1">
-                Save Updated Progress
-            </button>
-        </form>
+        <FormContainer>
+            <form method="post">
+                <h2 className="text-xl font-bold">Update Your Progress</h2>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="currentPage-input">Which page are you on?</FormLabel>
+                    <FormInput
+                        type="text"
+                        name="currentPage"
+                        id="currentPage-input"
+                        defaultValue={data?.book.currentPage}
+                    />
+                </FormLabeledInput>
+                <FormSubmitButton className="mt-1">Save Updated Progress</FormSubmitButton>
+            </form>
+        </FormContainer>
     );
 }

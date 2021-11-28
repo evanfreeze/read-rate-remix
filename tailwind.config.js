@@ -1,7 +1,7 @@
 module.exports = {
     mode: "jit",
     purge: ["./app/**/*.{ts,tsx}"],
-    darkMode: false, // or 'media' or 'class'
+    darkMode: "media", // or 'media' or 'class'
     theme: {
         extend: {},
     },

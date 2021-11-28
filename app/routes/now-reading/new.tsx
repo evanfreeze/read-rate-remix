@@ -1,18 +1,12 @@
 import { ActionFunction, LoaderFunction, LinksFunction, redirect } from "remix";
+import FormContainer from "~/components/FormContainer";
+import { FormInput } from "~/components/FormInput";
+import FormLabel from "~/components/FormLabel";
+import FormLabeledInput from "~/components/FormLabeledInput";
+import FormSubmitButton from "~/components/FormSubmitButton";
 import { convertBrowserZonedDateToUTC } from "~/utils/book";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
-
-import formStylesUrl from "../../styles/forms.css";
-
-export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "stylesheet",
-            href: formStylesUrl,
-        },
-    ];
-};
 
 export const loader: LoaderFunction = async ({ request }) => {
     await requireUserId(request, "/now-reading/new");
@@ -139,34 +133,32 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
 
 export default function AddNewBook() {
     return (
-        <div className="max-w-lg mx-auto form-container my-12">
+        <FormContainer className="max-w-lg mx-auto my-12">
             <h2 className="text-2xl font-bold">Add a Book</h2>
             <form method="post">
-                <div className="form-input">
-                    <label htmlFor="title-input">What's the title?</label>
-                    <input id="title-input" name="title" type="text" />
-                </div>
-                <div className="form-input">
-                    <label htmlFor="author-input">Who's the author?</label>
-                    <input id="author-input" name="author" type="text" />
-                </div>
-                <div className="form-input">
-                    <label htmlFor="pageCount-input">How many pages are in it?</label>
-                    <input id="pageCount-input" name="pageCount" type="text" />
-                </div>
-                <div className="form-input">
-                    <label htmlFor="currentPage-input">Which page are you starting on?</label>
-                    <input id="currentPage-input" name="currentPage" type="text" />
-                </div>
-                <div className="form-input">
-                    <label htmlFor="targetDate-input">When do you want to finish?</label>
-                    <input id="targetDate-input" name="targetDate" type="date" />
-                </div>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="title-input">What's the title?</FormLabel>
+                    <FormInput id="title-input" name="title" type="text" />
+                </FormLabeledInput>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="author-input">Who's the author?</FormLabel>
+                    <FormInput id="author-input" name="author" type="text" />
+                </FormLabeledInput>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="pageCount-input">How many pages are in it?</FormLabel>
+                    <FormInput id="pageCount-input" name="pageCount" type="text" />
+                </FormLabeledInput>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="currentPage-input">Which page are you starting on?</FormLabel>
+                    <FormInput id="currentPage-input" name="currentPage" type="text" />
+                </FormLabeledInput>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="targetDate-input">When do you want to finish?</FormLabel>
+                    <FormInput id="targetDate-input" name="targetDate" type="date" />
+                </FormLabeledInput>
                 <input type="hidden" name="tzOffsetMin" value={new Date().getTimezoneOffset()} />
-                <button type="submit" className="submit-button mt-3">
-                    Add Book
-                </button>
+                <FormSubmitButton className="mt-3">Add Book</FormSubmitButton>
             </form>
-        </div>
+        </FormContainer>
     );
 }

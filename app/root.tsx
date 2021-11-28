@@ -1,4 +1,5 @@
 import { User } from ".prisma/client";
+import { useLocation } from "react-router";
 import {
     Link,
     Links,
@@ -124,38 +125,46 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
 
 function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData<LoaderData>();
+    const location = useLocation();
+
+    console.log("location...", location);
+
     return (
-        <div id="remix-app" className="max-w-screen-lg mx-auto px-6 py-10">
-            <header className="sticky top-0 bg-white z-10">
-                <div className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center pt-5">
-                    <div className="flex gap-3 items-center">
-                        <img className="rounded-lg" src="/icon.png" width="48" height="48" />
-                        <Link to="/" title="Read Rate">
-                            <h1 className="text-5xl font-bold">Read Rate</h1>
-                        </Link>
-                    </div>
-                    {data?.user ? (
-                        <div className="flex gap-6 items-center justify-between w-full md:w-auto">
-                            <span className="text-gray-600 font-bold">{data?.user.email}</span>
-                            <form action="/logout" method="post">
-                                <button
-                                    type="submit"
-                                    aria-label="Logout Button"
-                                    className="bg-gray-100 p-3 flex items-center justify-center rounded-xl hover:bg-gray-200 transition-all duration-150 text-blue-500"
-                                >
-                                    <LogoutIcon className="w-5 h-5" />
-                                </button>
-                            </form>
+        <div id="remix-app" className="max-w-screen-lg mx-auto px-6 py-10 h-full">
+            {location.pathname == "/" ? null : (
+                <header className="sticky top-0 z-10 bg-white dark:bg-gray-900">
+                    <div className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center pt-5">
+                        <div className="flex gap-3 items-center">
+                            <img className="rounded-lg" src="/images/icon.png" width="48" height="48" />
+                            <Link to="/" title="Read Rate">
+                                <h1 className="text-5xl font-bold dark:text-gray-100">Read Rate</h1>
+                            </Link>
                         </div>
-                    ) : (
-                        <Link to="/login">Login</Link>
-                    )}
-                </div>
-                <hr className="my-6 text-gray-200" />
-            </header>
+                        {data?.user ? (
+                            <div className="flex gap-6 items-center justify-between w-full md:w-auto">
+                                <span className="text-gray-600 dark:text-gray-400 font-bold">{data?.user.email}</span>
+                                <form action="/logout" method="post">
+                                    <button
+                                        type="submit"
+                                        aria-label="Logout Button"
+                                        className="bg-gray-100 dark:bg-gray-800 p-3 flex items-center justify-center rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-150 text-blue-500"
+                                    >
+                                        <LogoutIcon className="w-5 h-5" />
+                                    </button>
+                                </form>
+                            </div>
+                        ) : (
+                            <Link className="dark:text-gray-300" to="/login">
+                                Login
+                            </Link>
+                        )}
+                    </div>
+                    <hr className="my-6 text-gray-200 dark:text-gray-700" />
+                </header>
+            )}
             <div className="mb-10">{children}</div>
-            <footer className="text-center fixed bottom-0 pb-4 pt-2 bg-white left-0 right-0">
-                <p className="text-gray-400">
+            <footer className="text-center fixed bottom-0 pb-4 pt-2 left-0 right-0 text-xs bg-white dark:bg-gray-900">
+                <p className="text-gray-400 dark:text-gray-500">
                     &copy; 2020–{new Date().getFullYear()} •{" "}
                     <a className="hover:underline hover:text-blue-500" href="https://www.evanfreeze.com">
                         Evan Freeze

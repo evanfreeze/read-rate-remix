@@ -47,13 +47,13 @@ export default function NowReading() {
 
     return (
         <main>
-            <h2 className="text-3xl font-bold text-gray-900">Now Reading</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-200">Now Reading</h2>
             <div className="flex flex-col gap-4 my-4">
                 {data?.books?.length ?? 0 > 0 ? (
                     data?.books.map((book) => <BookRow key={book.id} book={book} />)
                 ) : (
                     <>
-                        <p>You haven't started any books yet</p>
+                        <p className="text-gray-600 dark:text-gray-400">You haven't started any books yet</p>
                     </>
                 )}
             </div>
@@ -61,11 +61,11 @@ export default function NowReading() {
                 <Outlet />
             </div>
             <div className="flex justify-center gap-3 mt-10">
-                <button className="bg-gray-100 hover:bg-gray-200 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 hover:text-black font-bold">
+                <button className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 font-bold">
                     <ArchiveIcon className="w-5 h-5 text-blue-500" />
                     <Link to="/archive">Archived Books</Link>
                 </button>
-                <button className="bg-gray-100 hover:bg-gray-200 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 hover:text-black font-bold">
+                <button className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 font-bold">
                     <BookOpenIcon className="w-5 h-5 text-blue-500" />
                     <Link to="new">Add Book</Link>
                 </button>

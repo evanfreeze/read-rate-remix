@@ -1,20 +1,14 @@
 import { Book } from ".prisma/client";
 import { format } from "date-fns";
 import { LinksFunction, ActionFunction, redirect, LoaderFunction, useLoaderData } from "remix";
+import FormContainer from "~/components/FormContainer";
+import { FormInput } from "~/components/FormInput";
+import FormLabel from "~/components/FormLabel";
+import FormLabeledInput from "~/components/FormLabeledInput";
+import FormSubmitButton from "~/components/FormSubmitButton";
 import { convertBrowserZonedDateToUTC, createNewDailyTarget, shouldUpdateDailyTarget } from "~/utils/book";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
-
-import formStyles from "../../styles/forms.css";
-
-export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "stylesheet",
-            href: formStyles,
-        },
-    ];
-};
 
 type LoaderData = {
     book: Book;
@@ -76,25 +70,25 @@ export default function UpdateTargetGoal() {
     const data = useLoaderData<LoaderData | undefined>();
 
     return (
-        <form method="post" className="form-container">
-            <h2 className="text-xl font-bold">Update Your Target Date</h2>
-            <div className="form-input">
-                <label htmlFor="targetDate-input">When do you want to finish {data?.book.title}?</label>
-                <input
-                    type="date"
-                    name="targetDate"
-                    id="targetDate-input"
-                    defaultValue={
-                        data?.book.targetDate
-                            ? format(new Date(data.book.targetDate), "yyyy-MM-dd")
-                            : format(new Date(), "yyyy-MM-dd")
-                    }
-                />
-                <input type="hidden" name="tzOffsetMin" value={new Date().getTimezoneOffset()} />
-            </div>
-            <button type="submit" className="submit-button mt-1">
-                Save Updated Progress
-            </button>
-        </form>
+        <FormContainer>
+            <form method="post">
+                <h2 className="text-xl font-bold">Update Your Target Date</h2>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="targetDate-input">When do you want to finish {data?.book.title}?</FormLabel>
+                    <FormInput
+                        type="date"
+                        name="targetDate"
+                        id="targetDate-input"
+                        defaultValue={
+                            data?.book.targetDate
+                                ? format(new Date(data.book.targetDate), "yyyy-MM-dd")
+                                : format(new Date(), "yyyy-MM-dd")
+                        }
+                    />
+                    <input type="hidden" name="tzOffsetMin" value={new Date().getTimezoneOffset()} />
+                </FormLabeledInput>
+                <FormSubmitButton className="mt-1">Save Updated Date</FormSubmitButton>
+            </form>
+        </FormContainer>
     );
 }

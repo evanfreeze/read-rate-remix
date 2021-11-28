@@ -5,6 +5,7 @@ import { BookRow, BookWithTarget } from "./now-reading";
 import CircleProgress from "~/components/CircleProgress";
 import { getStatusDetails } from "~/utils/book";
 import { format, formatDistance } from "date-fns";
+import { ChevronLeftIcon } from "@heroicons/react/solid";
 
 type LoaderData = {
     book: BookWithTarget | null;
@@ -32,13 +33,13 @@ export default function BookDetail() {
 
     return (
         <div>
-            <Link to="/now-reading" className="text-blue-500">
-                ← Back to Now Reading
+            <Link to="/now-reading" className="text-blue-500 flex items-center font-semibold relative -left-1.5">
+                <ChevronLeftIcon className="w-5 h-5 relative" style={{ top: "1px" }} /> Now Reading
             </Link>
             <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">Book Details</h2>
             {data?.book ? (
-                <div className="lg:grid lg:grid-cols-3">
-                    <div className="flex gap-7 items-start bg-gray-100 max-w-max p-8 rounded-3xl lg:col-span-2">
+                <div className="lg:grid lg:grid-cols-3 lg:gap-4">
+                    <div className="flex gap-7 items-start bg-gray-100 p-8 rounded-3xl lg:col-span-2">
                         <figure className="w-20 h-20 relative top-1">
                             <CircleProgress
                                 color={getStatusDetails(data.book)[1]}
@@ -47,7 +48,7 @@ export default function BookDetail() {
                                 {getStatusDetails(data.book)[2]}
                             </CircleProgress>
                         </figure>
-                        <div className="border-l pl-7">
+                        <div className="border-l pl-7 w-full">
                             <h2 className="text-2xl font-bold text-gray-800">{data.book.title}</h2>
                             <h3 className="text-lg font-semibold text-gray-600">by {data.book.author}</h3>
                             <dl>
@@ -88,7 +89,7 @@ export default function BookDetail() {
                                     </dd>
                                 </div>
                             </dl>
-                            <div className="w-full flex justify-evenly gap-2 mt-12">
+                            <div className="w-full flex justify-center gap-2 mt-12">
                                 <Link
                                     className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-300 hover:text-black transition-all duration-150"
                                     to="update-goal"

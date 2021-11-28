@@ -1,16 +1,11 @@
 import { ActionFunction, useActionData, useSearchParams, LinksFunction } from "remix";
+import FormContainer from "~/components/FormContainer";
+import FormErrorMessage from "~/components/FormErrorMessage";
+import { FormInput } from "~/components/FormInput";
+import FormLabel from "~/components/FormLabel";
+import FormLabeledInput from "~/components/FormLabeledInput";
+import FormSubmitButton from "~/components/FormSubmitButton";
 import { createUserSession, login, signUp } from "~/utils/session.server";
-
-import formStylesUrl from "../styles/forms.css";
-
-export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "stylesheet",
-            href: formStylesUrl,
-        },
-    ];
-};
 
 function validateEmail(email: unknown) {
     if (typeof email !== "string" || email.trim().length < 4) {
@@ -98,7 +93,7 @@ export default function LoginPage() {
     const [searchParams] = useSearchParams();
 
     return (
-        <div className="max-w-lg mx-auto form-container my-12">
+        <FormContainer className="max-w-lg mx-auto my-12">
             <h2 className="text-2xl text-gray-900 font-bold text-center">Login or Sign Up</h2>
             <hr className="my-5" />
             <form
@@ -109,7 +104,7 @@ export default function LoginPage() {
                 <input type="hidden" name="redirectTo" value={searchParams.get("redirectTo") ?? "/now-reading"} />
                 <fieldset className="flex gap-8 justify-center my-3">
                     <legend className="sr-only">Login or Sign Up?</legend>
-                    <label className="form-label">
+                    <FormLabel>
                         <input
                             type="radio"
                             name="loginType"
@@ -117,8 +112,8 @@ export default function LoginPage() {
                             defaultChecked={!actionData?.fields?.loginType || actionData.fields.loginType === "login"}
                         />{" "}
                         Login
-                    </label>
-                    <label className="form-label">
+                    </FormLabel>
+                    <FormLabel>
                         <input
                             type="radio"
                             name="loginType"
@@ -126,13 +121,11 @@ export default function LoginPage() {
                             defaultChecked={actionData?.fields?.loginType === "signUp"}
                         />{" "}
                         Sign Up
-                    </label>
+                    </FormLabel>
                 </fieldset>
-                <div className="form-input">
-                    <label className="font-semibold" htmlFor="email-input">
-                        Email
-                    </label>
-                    <input
+                <FormLabeledInput>
+                    <FormLabel htmlFor="email-input">Email</FormLabel>
+                    <FormInput
                         type="email"
                         name="email"
                         id="email-input"
@@ -141,14 +134,14 @@ export default function LoginPage() {
                         aria-describedby={actionData?.fieldErrors?.email ? "email-error" : undefined}
                     />
                     {actionData?.fieldErrors?.email ? (
-                        <p className="text-red-600 font-semibold" role="alert" id="email-error">
+                        <FormErrorMessage role="alert" id="email-error">
                             {actionData?.fieldErrors?.email}
-                        </p>
+                        </FormErrorMessage>
                     ) : null}
-                </div>
-                <div className="form-input">
-                    <label htmlFor="password-input">Password</label>
-                    <input
+                </FormLabeledInput>
+                <FormLabeledInput>
+                    <FormLabel htmlFor="password-input">Password</FormLabel>
+                    <FormInput
                         type="password"
                         name="password"
                         id="password-input"
@@ -157,25 +150,18 @@ export default function LoginPage() {
                         aria-describedby={actionData?.fieldErrors?.password ? "password-error" : undefined}
                     />
                     {actionData?.fieldErrors?.password ? (
-                        <p className="text-red-600 font-semibold" role="alert" id="password-error">
+                        <FormErrorMessage role="alert" id="password-error">
                             {actionData?.fieldErrors?.password}
-                        </p>
+                        </FormErrorMessage>
                     ) : null}
-                </div>
+                </FormLabeledInput>
                 <div id="form-error-message">
                     {actionData?.formError ? (
-                        <p className="text-red-600 font-semibold" role="alert">
-                            {actionData?.formError}
-                        </p>
+                        <FormErrorMessage role="alert">{actionData?.formError}</FormErrorMessage>
                     ) : null}
                 </div>
-                <button
-                    type="submit"
-                    className="border w-full py-2 bg-gray-200 text-lg font-bold text-gray-700 mt-3 rounded-xl hover:bg-blue-500 hover:text-white transition-all duration-150"
-                >
-                    Submit
-                </button>
+                <FormSubmitButton className="mt-3">Submit</FormSubmitButton>
             </form>
-        </div>
+        </FormContainer>
     );
 }

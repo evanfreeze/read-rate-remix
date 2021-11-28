@@ -20,6 +20,7 @@
 html,
 body {
     height: 100%;
+    background: rgb(255, 255, 255);
 }
 /*
     Typographic tweaks!
@@ -73,4 +74,11 @@ h6 {
 /* Custom stuff */
 input[aria-invalid="true"] {
   border-color: rgb(220, 38, 38);
+}
+
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    background: rgb(17, 24, 39)
+  }
 }
