@@ -14,8 +14,8 @@ import {
 } from "remix";
 import { LogoutIcon } from "@heroicons/react/solid";
 
-import globalStylesUrl from "./global.css";
-import tailwindUrl from "./tailwind.css";
+import globalStylesUrl from "./styles/global.css";
+import tailwindUrl from "./styles/tailwind.css";
 import { getUser, getUserId } from "./utils/session.server";
 
 export const links: LinksFunction = () => {
@@ -126,31 +126,33 @@ function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData<LoaderData>();
     return (
         <div id="remix-app" className="max-w-screen-lg mx-auto px-6 py-10">
-            <header className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center">
-                <div className="flex gap-3 items-center">
-                    <img className="rounded-lg" src="/icon.png" width="48" height="48" />
-                    <Link to="/" title="Read Rate">
-                        <h1 className="text-5xl font-bold">Read Rate</h1>
-                    </Link>
-                </div>
-                {data?.user ? (
-                    <div className="flex gap-6 items-center justify-between w-full md:w-auto">
-                        <span className="text-gray-600 font-bold">{data?.user.email}</span>
-                        <form action="/logout" method="post">
-                            <button
-                                type="submit"
-                                aria-label="Logout Button"
-                                className="bg-gray-100 p-3 flex items-center justify-center rounded-xl hover:bg-gray-200 transition-all duration-150 text-blue-500"
-                            >
-                                <LogoutIcon className="w-5 h-5" />
-                            </button>
-                        </form>
+            <header className="sticky top-5 bg-white z-10">
+                <div className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center">
+                    <div className="flex gap-3 items-center">
+                        <img className="rounded-lg" src="/icon.png" width="48" height="48" />
+                        <Link to="/" title="Read Rate">
+                            <h1 className="text-5xl font-bold">Read Rate</h1>
+                        </Link>
                     </div>
-                ) : (
-                    <Link to="/login">Login</Link>
-                )}
+                    {data?.user ? (
+                        <div className="flex gap-6 items-center justify-between w-full md:w-auto">
+                            <span className="text-gray-600 font-bold">{data?.user.email}</span>
+                            <form action="/logout" method="post">
+                                <button
+                                    type="submit"
+                                    aria-label="Logout Button"
+                                    className="bg-gray-100 p-3 flex items-center justify-center rounded-xl hover:bg-gray-200 transition-all duration-150 text-blue-500"
+                                >
+                                    <LogoutIcon className="w-5 h-5" />
+                                </button>
+                            </form>
+                        </div>
+                    ) : (
+                        <Link to="/login">Login</Link>
+                    )}
+                </div>
+                <hr className="my-6 text-gray-200" />
             </header>
-            <hr className="my-6 text-gray-200" />
             <div>{children}</div>
             <footer>
                 <div className="absolute bottom-8 left-0 right-0 text-center">

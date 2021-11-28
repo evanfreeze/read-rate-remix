@@ -68,3 +68,9 @@ h6 {
 #remix-app {
     isolation: isolate;
 }
+
+
+/* Custom stuff */
+input[aria-invalid="true"] {
+  border-color: rgb(220, 38, 38);
+}
