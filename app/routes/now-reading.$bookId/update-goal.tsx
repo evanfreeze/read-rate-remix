@@ -1,7 +1,7 @@
 import { Book } from ".prisma/client";
 import { format } from "date-fns";
 import { LinksFunction, ActionFunction, redirect, LoaderFunction, useLoaderData } from "remix";
-import { createNewDailyTarget, shouldUpdateDailyTarget } from "~/utils/book";
+import { convertBrowserZonedDateToUTC, createNewDailyTarget, shouldUpdateDailyTarget } from "~/utils/book";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
@@ -46,13 +46,10 @@ export const action: ActionFunction = async ({ request, params }) => {
         throw new Error("failed to parse browser timezone for user");
     }
 
-    // This makes sure we're storing the UTC time in the database that corresponds to midnight on the date the user selected in their local timezone
-    const updatedTargetDate = new Date(new Date(targetDate).getTime() + Number(tzOffsetMin) * 60 * 1000);
-
     const book = await prisma.book.update({
         where: { id: params.bookId },
         data: {
-            targetDate: updatedTargetDate,
+            targetDate: convertBrowserZonedDateToUTC(targetDate, tzOffsetMin),
         },
         include: {
             dailyTargets: {

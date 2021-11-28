@@ -1,4 +1,5 @@
 import { ActionFunction, LoaderFunction, LinksFunction, redirect } from "remix";
+import { convertBrowserZonedDateToUTC } from "~/utils/book";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
@@ -33,6 +34,7 @@ type ActionData = {
         pageCount: string;
         currentPage: string;
         targetDate: string;
+        tzOffsetMin: string;
     };
 };
 
@@ -73,20 +75,22 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
     const pageCount = form.get("pageCount");
     const currentPage = form.get("currentPage");
     const targetDate = form.get("targetDate");
+    const tzOffsetMin = form.get("tzOffsetMin");
 
     if (
         typeof title !== "string" ||
         typeof author !== "string" ||
         typeof pageCount !== "string" ||
         typeof currentPage !== "string" ||
-        typeof targetDate !== "string"
+        typeof targetDate !== "string" ||
+        typeof tzOffsetMin !== "string"
     ) {
         return {
             formError: "Form submitted incorrectly. All values must be strings",
         };
     }
 
-    const fields = { title, author, pageCount, currentPage, targetDate };
+    const fields = { title, author, pageCount, currentPage, targetDate, tzOffsetMin };
 
     const fieldErrors = {
         title: validateExistence(title, "Title"),
@@ -116,7 +120,7 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
             author,
             pageCount: Number(pageCount),
             currentPage: Number(currentPage),
-            targetDate: new Date(targetDate),
+            targetDate: convertBrowserZonedDateToUTC(targetDate, tzOffsetMin),
             mode: "date",
             startDate: new Date(),
             readerId: userId,
@@ -158,6 +162,7 @@ export default function AddNewBook() {
                     <label htmlFor="targetDate-input">When do you want to finish?</label>
                     <input id="targetDate-input" name="targetDate" type="date" />
                 </div>
+                <input type="hidden" name="tzOffsetMin" value={new Date().getTimezoneOffset()} />
                 <button type="submit" className="submit-button mt-3">
                     Add Book
                 </button>

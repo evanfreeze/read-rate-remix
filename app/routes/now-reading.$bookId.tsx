@@ -59,7 +59,16 @@ export default function BookDetail() {
                                     </dd>
                                 </div>
                                 <div className="my-4">
-                                    <dt className="font-semibold text-gray-600">Today's Status</dt>
+                                    <dt className="font-semibold text-gray-600">
+                                        Today's Goal{" "}
+                                        <span className="font-normal text-sm text-gray-600">
+                                            (calculated{" "}
+                                            {formatDistance(new Date(data.book.dailyTargets[0].calcTime), new Date(), {
+                                                addSuffix: true,
+                                            })}
+                                            )
+                                        </span>
+                                    </dt>
                                     <dd className="text-sm text-gray-500">
                                         {getStatusDetails(data.book)[0]} (
                                         {Math.max(data.book.dailyTargets[0].targetPage - data.book.currentPage, 0)} more

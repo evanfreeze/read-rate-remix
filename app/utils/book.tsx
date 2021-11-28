@@ -21,6 +21,11 @@ export const getStatusDetails = (book: BookWithTarget): [string, HSLColor, React
     return ["You've read enough today to stay on track", GREEN, <CheckIcon className="w-10 h-10" />];
 };
 
+export function convertBrowserZonedDateToUTC(browserDate: string, tzOffsetMin: string) {
+    // This makes sure we're storing the UTC time in the database that corresponds to midnight on the date the user selected in their local timezone
+    return new Date(new Date(browserDate).getTime() + Number(tzOffsetMin) * 60 * 1000);
+}
+
 export function shouldUpdateDailyTarget(book: BookWithTarget) {
     return (
         !book.dailyTargets.length ||
@@ -30,7 +35,7 @@ export function shouldUpdateDailyTarget(book: BookWithTarget) {
 }
 
 export function calcaulateTargetPage(book: Book): number {
-    const daysLeft = differenceInCalendarDays(book.targetDate, new Date());
+    const daysLeft = differenceInCalendarDays(book.targetDate, new Date()) + 1;
     const pagesLeft = book.pageCount - book.currentPage;
     const pagesPerDay = Math.ceil(pagesLeft / daysLeft);
     return book.currentPage + pagesPerDay;
