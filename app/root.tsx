@@ -1,5 +1,4 @@
 import { User } from ".prisma/client";
-import { useLocation } from "react-router";
 import {
     Link,
     Links,
@@ -12,6 +11,7 @@ import {
     useCatch,
     LoaderFunction,
     useLoaderData,
+    useLocation,
 } from "remix";
 import { LogoutIcon } from "@heroicons/react/solid";
 
