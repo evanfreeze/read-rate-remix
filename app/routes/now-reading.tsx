@@ -3,7 +3,9 @@ import { Outlet, Link, LoaderFunction, useLoaderData } from "remix";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 import { differenceInCalendarDays, isToday } from "date-fns";
-import AddNewBook from "./now-reading/new";
+import { BookOpenIcon } from "@heroicons/react/outline";
+import { ArchiveIcon } from "@heroicons/react/outline";
+import CircleProgress from "~/components/CircleProgress";
 
 interface BookWithTarget extends Book {
     dailyTargets: DailyTarget[];
@@ -66,7 +68,8 @@ export default function NowReading() {
 
     return (
         <main>
-            <div>
+            <h2 className="text-3xl font-bold text-gray-900">Now Reading</h2>
+            <div className="flex flex-col gap-4 my-4">
                 {data?.books?.length ?? 0 > 0 ? (
                     data?.books.map((book) => <BookRow key={book.id} book={book} />)
                 ) : (
@@ -74,20 +77,26 @@ export default function NowReading() {
                         <p>You haven't started any books yet</p>
                     </>
                 )}
-                <Link to="new">Add a book</Link>
+            </div>
+            <div className="absolute  bottom-20 left-0 right-0 flex justify-center gap-3">
+                <button className="bg-gray-100 hover:bg-gray-200 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 hover:text-black font-bold">
+                    <ArchiveIcon className="w-5 h-5 text-blue-500" />
+                    <Link to="new">Archived Books</Link>
+                </button>
+                <button className="bg-gray-100 hover:bg-gray-200 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 hover:text-black font-bold">
+                    <BookOpenIcon className="w-5 h-5 text-blue-500" />
+                    <Link to="new">Add Book</Link>
+                </button>
             </div>
             <div>
                 <Outlet />
             </div>
-            <form action="/logout" method="post">
-                <button type="submit">Logout</button>
-            </form>
         </main>
     );
 }
 
 function BookRow({ book }: { book: BookWithTarget }) {
-    const percentComplete = Math.round((book.currentPage / book.pageCount) * 100);
+    const percentComplete = book.currentPage / book.pageCount;
     const targetPage = book.dailyTargets[0].targetPage;
     const pagesRemaining = Math.max(0, targetPage - book.currentPage);
 
@@ -102,13 +111,17 @@ function BookRow({ book }: { book: BookWithTarget }) {
     };
 
     return (
-        <div>
-            <h2>{book.title}</h2>
-            <h3>{book.author}</h3>
-            <p>{percentComplete}% complete</p>
-            <p>
-                {getText()} ({pagesRemaining} more pages)
-            </p>
+        <div className="bg-gray-100 rounded-xl p-7 flex gap-7 items-center">
+            <figure className="w-20 h-20">
+                <CircleProgress color={{ h: "217deg", s: "91.2%", l: "59.8%" }} progress={percentComplete}>
+                    <span>{pagesRemaining}</span>
+                </CircleProgress>
+            </figure>
+            <div>
+                <h2 className="text-2xl font-bold text-gray-800">{book.title}</h2>
+                <h3 className="text-lg font-semibold text-gray-600">{book.author}</h3>
+                <p className="text-sm text-gray-500 mt-1.5">{getText()}</p>
+            </div>
         </div>
     );
 }

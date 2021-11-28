@@ -2,17 +2,6 @@ import { useState } from "react";
 import { ActionFunction, useActionData, useSearchParams, LinksFunction } from "remix";
 import { createUserSession, login, signUp } from "~/utils/session.server";
 
-import loginStylesUrl from "../styles/login.css";
-
-export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "stylesheet",
-            href: loginStylesUrl,
-        },
-    ];
-};
-
 function validateEmail(email: unknown) {
     if (typeof email !== "string" || email.trim().length < 4) {
         return "Invalid email address (must be at least 4 characters)";

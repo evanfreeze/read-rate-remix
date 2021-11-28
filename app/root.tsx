@@ -1,15 +1,49 @@
-import { Link, Links, LinksFunction, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from "remix";
+import { User } from ".prisma/client";
+import {
+    Link,
+    Links,
+    LinksFunction,
+    LiveReload,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+    useCatch,
+    LoaderFunction,
+    useLoaderData,
+} from "remix";
+import { LogoutIcon } from "@heroicons/react/solid";
 
-import globalStylesUrl from "./styles/global.css";
+import globalStylesUrl from "./global.css";
 import tailwindUrl from "./tailwind.css";
+import { getUser, getUserId } from "./utils/session.server";
 
 export const links: LinksFunction = () => {
     return [
         {
             rel: "stylesheet",
+            href: globalStylesUrl,
+        },
+        {
+            rel: "stylesheet",
             href: tailwindUrl,
         },
     ];
+};
+
+type LoaderData = {
+    user: User | null;
+};
+
+export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> => {
+    const userId = await getUserId(request);
+    let user: User | null = null;
+
+    if (userId) {
+        user = await getUser(request);
+    }
+
+    return { user };
 };
 
 export default function App() {
@@ -89,28 +123,43 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
+    const data = useLoaderData<LoaderData>();
     return (
-        <div id="remix-app">
-            <header className="remix-app__header">
-                <div className="container remix-app__header-content">
+        <div id="remix-app" className="max-w-screen-lg mx-auto px-6 py-10">
+            <header className="flex flex-col items-start gap-3 md:flex-row md:justify-between md:items-center">
+                <div className="flex gap-3 items-center">
+                    <img className="rounded-lg" src="/icon.png" width="48" height="48" />
                     <Link to="/" title="Read Rate">
-                        <h1>Read Rate</h1>
+                        <h1 className="text-5xl font-bold">Read Rate</h1>
                     </Link>
-                    <nav aria-label="Main navigation">
-                        <ul>
-                            <li>
-                                <Link to="/now-reading">Now Reading</Link>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
+                {data?.user ? (
+                    <div className="flex gap-6 items-center justify-between w-full md:w-auto">
+                        <span className="text-gray-600 font-bold">{data?.user.email}</span>
+                        <form action="/logout" method="post">
+                            <button
+                                type="submit"
+                                aria-label="Logout Button"
+                                className="bg-gray-100 p-3 flex items-center justify-center rounded-xl hover:bg-gray-200 transition-all duration-150 text-blue-500"
+                            >
+                                <LogoutIcon className="w-5 h-5" />
+                            </button>
+                        </form>
+                    </div>
+                ) : (
+                    <Link to="/login">Login</Link>
+                )}
             </header>
-            <div>
-                <div>{children}</div>
-            </div>
+            <hr className="my-6 text-gray-200" />
+            <div>{children}</div>
             <footer>
-                <div>
-                    <p>&copy; 2020 – {new Date().getFullYear()} Evan Freeze</p>
+                <div className="absolute bottom-8 left-0 right-0 text-center">
+                    <p className="text-gray-400">
+                        &copy; 2020–{new Date().getFullYear()} •{" "}
+                        <a className="hover:underline hover:text-blue-500" href="https://www.evanfreeze.com">
+                            Evan Freeze
+                        </a>
+                    </p>
                 </div>
             </footer>
         </div>
