@@ -4,8 +4,10 @@
     "description": "",
     "license": "",
     "scripts": {
-        "build": "remix build",
-        "dev": "node -r dotenv/config node_modules/.bin/remix dev",
+        "build": "npm run build:css && remix build",
+        "build:css": "tailwindcss -o ./app/tailwind.css",
+        "dev": "concurrently \"npm run dev:css\" \"node -r dotenv/config node_modules/.bin/remix dev\"",
+        "dev:css": "tailwindcss -o ./app/tailwind.css --watch",
         "postinstall": "remix setup node",
         "start": "remix-serve build"
     },
@@ -25,7 +27,9 @@
         "@types/bcrypt": "^5.0.0",
         "@types/react": "^17.0.24",
         "@types/react-dom": "^17.0.9",
+        "concurrently": "^6.4.0",
         "prisma": "^3.5.0",
+        "tailwindcss": "^2.2.19",
         "typescript": "^4.1.2"
     },
     "engines": {
