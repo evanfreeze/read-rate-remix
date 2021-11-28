@@ -32,10 +32,13 @@ export default function BookDetail() {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Book Details</h2>
+            <Link to="/now-reading" className="text-blue-500">
+                ← Back to Now Reading
+            </Link>
+            <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">Book Details</h2>
             {data?.book ? (
-                <div className="grid grid-cols-3">
-                    <div className="flex gap-7 items-start bg-gray-100 max-w-max p-8 rounded-3xl col-span-2">
+                <div className="lg:grid lg:grid-cols-3">
+                    <div className="flex gap-7 items-start bg-gray-100 max-w-max p-8 rounded-3xl lg:col-span-2">
                         <figure className="w-20 h-20 relative top-1">
                             <CircleProgress
                                 color={getStatusDetails(data.book)[1]}
@@ -76,15 +79,15 @@ export default function BookDetail() {
                                     </dd>
                                 </div>
                             </dl>
-                            <div className="w-full flex justify-evenly gap-2">
+                            <div className="w-full flex justify-evenly gap-2 mt-12">
                                 <Link
-                                    className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-150"
+                                    className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-300 hover:text-black transition-all duration-150"
                                     to="update-goal"
                                 >
                                     Change Target Date
                                 </Link>
                                 <Link
-                                    className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-150"
+                                    className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-300 hover:text-black transition-all duration-150"
                                     to="update-page"
                                 >
                                     Update Progress
@@ -92,7 +95,9 @@ export default function BookDetail() {
                             </div>
                         </div>
                     </div>
-                    <Outlet />
+                    <div className="mt-12 lg:mt-0">
+                        <Outlet />
+                    </div>
                 </div>
             ) : (
                 <p>There was a problem getting the information for this book</p>

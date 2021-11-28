@@ -6,7 +6,7 @@ import { differenceInCalendarDays, isToday } from "date-fns";
 import { BookOpenIcon } from "@heroicons/react/outline";
 import { ArchiveIcon } from "@heroicons/react/outline";
 import CircleProgress from "~/components/CircleProgress";
-import { getStatusDetails } from "~/utils/book";
+import { createNewDailyTarget, getStatusDetails, shouldUpdateDailyTarget } from "~/utils/book";
 
 export interface BookWithTarget extends Book {
     dailyTargets: DailyTarget[];
@@ -15,13 +15,6 @@ export interface BookWithTarget extends Book {
 type LoaderData = {
     books: BookWithTarget[];
 };
-
-function calcaulateTargetPage(book: Book): number {
-    const daysLeft = differenceInCalendarDays(book.targetDate, new Date());
-    const pagesLeft = book.pageCount - book.currentPage;
-    const pagesPerDay = Math.ceil(pagesLeft / daysLeft);
-    return book.currentPage + pagesPerDay;
-}
 
 export const loader: LoaderFunction = async ({ request }) => {
     const userId = await requireUserId(request, "/now-reading");
@@ -40,23 +33,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     for (let i = 0; i < books.length; i += 1) {
         const book = books[i];
 
-        if (
-            !book.dailyTargets.length ||
-            !isToday(book.dailyTargets[0].calcTime) ||
-            String(book.targetDate) !== String(book.dailyTargets[0].snapshot_targetDate)
-        ) {
-            const newTarget = await prisma.dailyTarget.create({
-                data: {
-                    calcTime: new Date(),
-                    bookId: book.id,
-                    targetPage: calcaulateTargetPage(book),
-                    snapshot_currentPage: book.currentPage,
-                    snapshot_mode: book.mode,
-                    snapshot_pageCount: book.pageCount,
-                    snapshot_targetDate: book.targetDate,
-                    snapshot_rateGoal: book.rateGoal,
-                },
-            });
+        if (shouldUpdateDailyTarget(book)) {
+            const newTarget = await createNewDailyTarget(book);
             book.dailyTargets = [newTarget];
         }
     }

@@ -98,7 +98,7 @@ export default function LoginPage() {
     const [searchParams] = useSearchParams();
 
     return (
-        <div className="max-w-lg mx-auto form-container">
+        <div className="max-w-lg mx-auto form-container my-12">
             <h2 className="text-2xl text-gray-900 font-bold text-center">Login or Sign Up</h2>
             <hr className="my-5" />
             <form

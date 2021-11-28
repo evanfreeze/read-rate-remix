@@ -135,7 +135,7 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
 
 export default function AddNewBook() {
     return (
-        <div className="max-w-lg mx-auto form-container">
+        <div className="max-w-lg mx-auto form-container my-12">
             <h2 className="text-2xl font-bold">Add a Book</h2>
             <form method="post">
                 <div className="form-input">
