@@ -79,6 +79,7 @@ input[aria-invalid="true"] {
 @media (prefers-color-scheme: dark) {
   html,
   body {
-    background: rgb(17, 24, 39)
+    background: rgb(17, 24, 39);
+    color: rgb(200, 200, 200)
   }
 }

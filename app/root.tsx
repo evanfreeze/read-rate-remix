@@ -159,7 +159,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                             </Link>
                         )}
                     </div>
-                    <hr className="my-6 text-gray-200 dark:text-gray-700" />
+                    <hr className="border-gray-300 dark:border-gray-700 my-6" />
                 </header>
             )}
             <div className="mb-10">{children}</div>

@@ -52,20 +52,18 @@ export default function NowReading() {
                 {data?.books?.length ?? 0 > 0 ? (
                     data?.books.map((book) => <BookRow key={book.id} book={book} />)
                 ) : (
-                    <>
-                        <p className="text-gray-600 dark:text-gray-400">You haven't started any books yet</p>
-                    </>
+                    <p className="text-gray-600 dark:text-gray-400">You haven't started any books yet</p>
                 )}
             </div>
             <div>
                 <Outlet />
             </div>
             <div className="flex justify-center gap-3 mt-10">
-                <button className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 font-bold">
+                <button className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 font-bold">
                     <ArchiveIcon className="w-5 h-5 text-blue-500" />
                     <Link to="/archive">Archived Books</Link>
                 </button>
-                <button className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 p-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 font-bold">
+                <button className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-3 flex gap-1.5 items-center justify-center rounded-xl transition-all duration-150 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 font-bold">
                     <BookOpenIcon className="w-5 h-5 text-blue-500" />
                     <Link to="new">Add Book</Link>
                 </button>
@@ -76,20 +74,18 @@ export default function NowReading() {
 
 export function BookRow({ book }: { book: BookWithTarget }) {
     const percentComplete = book.currentPage / book.pageCount;
-    const targetPage = book.dailyTargets[0].targetPage;
-    const pagesRemaining = Math.max(0, targetPage - book.currentPage);
 
     return (
-        <Link to={`${book.id}`} className="bg-gray-100 rounded-3xl p-7 flex gap-7 items-center">
+        <Link to={`${book.id}`} className="bg-gray-100 dark:bg-gray-800 rounded-3xl p-7 flex gap-7 items-center">
             <figure className="w-20 h-20">
                 <CircleProgress color={getStatusDetails(book)[1]} progress={percentComplete}>
                     {getStatusDetails(book)[2]}
                 </CircleProgress>
             </figure>
             <div>
-                <h2 className="text-2xl font-bold text-gray-800">{book.title}</h2>
-                <h3 className="text-lg font-semibold text-gray-600">{book.author}</h3>
-                <p className="text-sm text-gray-500 mt-1.5">{getStatusDetails(book)[0]}</p>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{book.title}</h2>
+                <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300">{book.author}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5">{getStatusDetails(book)[0]}</p>
             </div>
         </Link>
     );

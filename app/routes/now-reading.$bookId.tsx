@@ -35,7 +35,10 @@ export default function BookDetail() {
 
     return (
         <div>
-            <Link to="/now-reading" className="text-blue-500 flex items-center font-semibold relative -left-1.5">
+            <Link
+                to="/now-reading"
+                className="text-blue-500 flex items-center font-semibold relative -left-1.5 max-w-max"
+            >
                 <ChevronLeftIcon className="w-5 h-5 relative" style={{ top: "1px" }} /> Now Reading
             </Link>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-4 mb-6">Book Details</h2>
@@ -132,8 +135,8 @@ function ButtonLink({ to, children }: { to: string; children: React.ReactNode })
 function BookDetailsItem({ title, body }: { title: React.ReactNode; body: React.ReactNode }) {
     return (
         <div className="my-4">
-            <dt className="font-semibold text-sm text-gray-600 dark:text-gray-300">{title}</dt>
-            <dd className="text-sm text-gray-400">{body}</dd>
+            <dt className="font-semibold text-gray-600 dark:text-gray-300">{title}</dt>
+            <dd className="text-sm text-gray-500 dark:text-gray-400">{body}</dd>
         </div>
     );
 }
