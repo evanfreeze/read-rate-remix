@@ -111,7 +111,7 @@ function BookRow({ book }: { book: BookWithTarget }) {
     };
 
     return (
-        <div className="bg-gray-100 rounded-xl p-7 flex gap-7 items-center">
+        <div className="bg-gray-100 rounded-3xl p-7 flex gap-7 items-center">
             <figure className="w-20 h-20">
                 <CircleProgress color={{ h: "217deg", s: "91.2%", l: "59.8%" }} progress={percentComplete}>
                     <span>{pagesRemaining}</span>
