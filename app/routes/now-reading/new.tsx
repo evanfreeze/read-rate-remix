@@ -4,7 +4,7 @@ import { FormInput } from "~/components/FormInput";
 import FormLabel from "~/components/FormLabel";
 import FormLabeledInput from "~/components/FormLabeledInput";
 import FormSubmitButton from "~/components/FormSubmitButton";
-import { convertBrowserZonedDateToUTC } from "~/utils/book";
+import { calculateTargetPage, convertBrowserZonedDateToUTC } from "~/utils/book";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
@@ -108,16 +108,29 @@ export const action: ActionFunction = async ({ request }): Promise<ActionData | 
         };
     }
 
+    const targetDateInUTC = convertBrowserZonedDateToUTC(targetDate, tzOffsetMin);
+
     const book = await prisma.book.create({
         data: {
             title,
             author,
             pageCount: Number(pageCount),
             currentPage: Number(currentPage),
-            targetDate: convertBrowserZonedDateToUTC(targetDate, tzOffsetMin),
+            targetDate: targetDateInUTC,
             mode: "date",
             startDate: new Date(),
             readerId: userId,
+            goal_targetPage: calculateTargetPage({
+                currentPage: Number(currentPage),
+                pageCount: Number(pageCount),
+                targetDate: targetDateInUTC,
+            }),
+            goal_targetCalculatedAt: new Date(),
+            goal_snapshot_currentPage: Number(currentPage),
+            goal_snapshot_mode: "date",
+            goal_snapshot_pageCount: Number(pageCount),
+            goal_snapshot_targetDate: targetDateInUTC,
+            goal_snapshot_rateGoal: null,
         },
     });
 

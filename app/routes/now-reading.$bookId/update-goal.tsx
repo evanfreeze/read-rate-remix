@@ -6,7 +6,7 @@ import { FormInput } from "~/components/FormInput";
 import FormLabel from "~/components/FormLabel";
 import FormLabeledInput from "~/components/FormLabeledInput";
 import FormSubmitButton from "~/components/FormSubmitButton";
-import { convertBrowserZonedDateToUTC, createNewDailyTarget, shouldUpdateDailyTarget } from "~/utils/book";
+import { convertBrowserZonedDateToUTC, updateBookTarget, shouldUpdateDailyTarget } from "~/utils/book";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
@@ -45,14 +45,6 @@ export const action: ActionFunction = async ({ request, params }) => {
         data: {
             targetDate: convertBrowserZonedDateToUTC(targetDate, tzOffsetMin),
         },
-        include: {
-            dailyTargets: {
-                take: 1,
-                orderBy: {
-                    calcTime: "desc",
-                },
-            },
-        },
     });
 
     if (!book) {
@@ -60,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
 
     if (shouldUpdateDailyTarget(book)) {
-        await createNewDailyTarget(book);
+        await updateBookTarget(book);
     }
 
     return redirect(`/now-reading/${params.bookId}`);

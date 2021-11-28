@@ -1,40 +1,28 @@
-import { Book, DailyTarget } from ".prisma/client";
+import { Book } from ".prisma/client";
 import { Outlet, Link, LoaderFunction, useLoaderData } from "remix";
 import { prisma } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 import { BookOpenIcon } from "@heroicons/react/outline";
 import { ArchiveIcon } from "@heroicons/react/outline";
 import CircleProgress from "~/components/CircleProgress";
-import { createNewDailyTarget, getStatusDetails, shouldUpdateDailyTarget } from "~/utils/book";
-
-export interface BookWithTarget extends Book {
-    dailyTargets: DailyTarget[];
-}
+import { updateBookTarget, getStatusDetails, shouldUpdateDailyTarget } from "~/utils/book";
 
 type LoaderData = {
-    books: BookWithTarget[];
+    books: Book[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
     const userId = await requireUserId(request, "/now-reading");
     const books = await prisma.book.findMany({
-        where: { readerId: userId },
-        include: {
-            dailyTargets: {
-                take: 1,
-                orderBy: {
-                    calcTime: "desc",
-                },
-            },
-        },
+        where: { readerId: userId, archivedAt: null },
     });
 
     for (let i = 0; i < books.length; i += 1) {
         const book = books[i];
 
         if (shouldUpdateDailyTarget(book)) {
-            const newTarget = await createNewDailyTarget(book);
-            book.dailyTargets = [newTarget];
+            const updatedBook = await updateBookTarget(book);
+            books[i] = updatedBook;
         }
     }
 
@@ -51,7 +39,7 @@ export default function NowReading() {
                 {data?.books?.length ?? 0 > 0 ? (
                     data?.books.map((book) => <BookRow key={book.id} book={book} />)
                 ) : (
-                    <p className="text-gray-600 dark:text-gray-400">You haven't started any books yet</p>
+                    <p className="text-gray-600 dark:text-gray-400">You don't have any active books</p>
                 )}
             </div>
             <div>
@@ -71,7 +59,7 @@ export default function NowReading() {
     );
 }
 
-export function BookRow({ book }: { book: BookWithTarget }) {
+export function BookRow({ book }: { book: Book }) {
     const percentComplete = book.currentPage / book.pageCount;
 
     return (

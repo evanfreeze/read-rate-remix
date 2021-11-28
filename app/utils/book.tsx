@@ -3,15 +3,14 @@ import { CheckIcon, StarIcon } from "@heroicons/react/solid";
 import { differenceInCalendarDays, isToday } from "date-fns";
 import React from "react";
 import { HSLColor } from "~/components/CircleProgress";
-import { BookWithTarget } from "~/routes/now-reading";
 import { prisma } from "./db.server";
 
 export const BLUE = { h: "217deg", s: "91.2%", l: "59.8%" };
 export const GOLD = { h: "43deg", s: "96.4%", l: "56.3%" };
 export const GREEN = { h: "158deg", s: "64.4%", l: "51.6%" };
 
-export const getStatusDetails = (book: BookWithTarget): [string, HSLColor, React.ReactNode] => {
-    const targetPage = book.dailyTargets[0].targetPage;
+export const getStatusDetails = (book: Book): [string, HSLColor, React.ReactNode] => {
+    const targetPage = book.goal_targetPage;
     if (book.currentPage === book.pageCount) {
         return ["You've completed the book — congrats!", GOLD, <StarIcon className="w-10 h-10" />];
     }
@@ -26,32 +25,34 @@ export function convertBrowserZonedDateToUTC(browserDate: string, tzOffsetMin: s
     return new Date(new Date(browserDate).getTime() + Number(tzOffsetMin) * 60 * 1000);
 }
 
-export function shouldUpdateDailyTarget(book: BookWithTarget) {
+export function shouldUpdateDailyTarget(book: Book) {
     return (
-        !book.dailyTargets.length ||
-        !isToday(book.dailyTargets[0].calcTime) ||
-        String(book.targetDate) !== String(book.dailyTargets[0].snapshot_targetDate)
+        !book.goal_targetPage ||
+        !isToday(book.goal_targetCalculatedAt) ||
+        String(book.targetDate) !== String(book.goal_snapshot_targetDate)
     );
 }
 
-export function calcaulateTargetPage(book: Book): number {
-    const daysLeft = differenceInCalendarDays(book.targetDate, new Date()) + 1;
-    const pagesLeft = book.pageCount - book.currentPage;
+type BookFieldsForTargetCalculation = Pick<Book, "targetDate" | "currentPage" | "pageCount">;
+
+export function calculateTargetPage(partialBook: BookFieldsForTargetCalculation): number {
+    const daysLeft = differenceInCalendarDays(partialBook.targetDate, new Date()) + 1;
+    const pagesLeft = partialBook.pageCount - partialBook.currentPage;
     const pagesPerDay = Math.ceil(pagesLeft / daysLeft);
-    return book.currentPage + pagesPerDay;
+    return partialBook.currentPage + pagesPerDay;
 }
 
-export async function createNewDailyTarget(book: BookWithTarget) {
-    const newTarget = await prisma.dailyTarget.create({
+export async function updateBookTarget(book: Book) {
+    const newTarget = await prisma.book.update({
+        where: { id: book.id },
         data: {
-            calcTime: new Date(),
-            bookId: book.id,
-            targetPage: calcaulateTargetPage(book),
-            snapshot_currentPage: book.currentPage,
-            snapshot_mode: book.mode,
-            snapshot_pageCount: book.pageCount,
-            snapshot_targetDate: book.targetDate,
-            snapshot_rateGoal: book.rateGoal,
+            goal_targetCalculatedAt: new Date(),
+            goal_targetPage: calculateTargetPage(book),
+            goal_snapshot_currentPage: book.currentPage,
+            goal_snapshot_mode: book.mode,
+            goal_snapshot_pageCount: book.pageCount,
+            goal_snapshot_targetDate: book.targetDate,
+            goal_snapshot_rateGoal: book.rateGoal,
         },
     });
 

@@ -1,30 +1,23 @@
 import { LoaderFunction, useLoaderData, Outlet, Link } from "remix";
 import { requireUserId } from "~/utils/session.server";
 import { prisma } from "~/utils/db.server";
-import { BookWithTarget } from "./now-reading";
 import CircleProgress from "~/components/CircleProgress";
 import { getStatusDetails } from "~/utils/book";
 import { formatDistance } from "date-fns";
-import { ChevronLeftIcon } from "@heroicons/react/solid";
+import { ArchiveIcon, TrashIcon, CalendarIcon, BookmarkIcon } from "@heroicons/react/outline";
 import React from "react";
 import FormErrorMessage from "~/components/FormErrorMessage";
+import { Book } from ".prisma/client";
+import BackToNowReading from "../components/BackToNowReading";
 
 type LoaderData = {
-    book: BookWithTarget | null;
+    book: Book | null;
 };
 
 export const loader: LoaderFunction = async ({ request, params }): Promise<LoaderData> => {
     await requireUserId(request, new URL(request.url).pathname);
     const book = await prisma.book.findUnique({
         where: { id: params.bookId },
-        include: {
-            dailyTargets: {
-                take: 1,
-                orderBy: {
-                    calcTime: "desc",
-                },
-            },
-        },
     });
 
     return { book };
@@ -35,28 +28,60 @@ export default function BookDetail() {
 
     return (
         <div>
-            <Link
-                to="/now-reading"
-                className="text-blue-500 flex items-center font-semibold relative -left-1.5 max-w-max"
-            >
-                <ChevronLeftIcon className="w-5 h-5 relative" style={{ top: "1px" }} /> Now Reading
-            </Link>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-4 mb-6">Book Details</h2>
+            <BackToNowReading />
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Book Details</h2>
             {data?.book ? (
                 <div className="lg:grid lg:grid-cols-3 lg:gap-4">
                     <div className="flex gap-7 items-start bg-gray-100 dark:bg-gray-800 p-8 rounded-3xl lg:col-span-2">
-                        <figure className="w-20 h-20 relative top-1">
-                            <CircleProgress
-                                color={getStatusDetails(data.book)[1]}
-                                progress={data.book.currentPage / data.book.pageCount}
-                            >
-                                {getStatusDetails(data.book)[2]}
-                            </CircleProgress>
-                        </figure>
-                        <div className="border-l dark:border-gray-500 pl-7 w-full">
+                        <div className="flex flex-col justify-between min-h-full border-r dark:border-gray-500 pr-7">
+                            <figure className="w-20 h-20 relative top-1 mb-20">
+                                <CircleProgress
+                                    color={getStatusDetails(data.book)[1]}
+                                    progress={data.book.currentPage / data.book.pageCount}
+                                >
+                                    {getStatusDetails(data.book)[2]}
+                                </CircleProgress>
+                                <figcaption className="sr-only">
+                                    A progress indicator showing the book is{" "}
+                                    {Math.round((data.book.currentPage / data.book.pageCount) * 100)} percent complte
+                                </figcaption>
+                            </figure>
+                            <div className="flex flex-col gap-6 items-center mb-2">
+                                <Link
+                                    to="update-page"
+                                    className="rounded-full p-3 bg-gray-200 dark:bg-gray-700 hover:shadow transition-all duration-150 hover:scale-110 text-purple-500"
+                                    aria-label="Update book progress"
+                                >
+                                    <BookmarkIcon className="w-8 h-8" />
+                                </Link>
+                                <Link
+                                    to="update-goal"
+                                    className="rounded-full p-3 bg-gray-200 dark:bg-gray-700 hover:shadow transition-all duration-150 hover:scale-110 text-blue-500"
+                                    aria-label="Change target date"
+                                >
+                                    <CalendarIcon className="w-8 h-8" />
+                                </Link>
+                                <Link
+                                    to="archive-book"
+                                    className="rounded-full p-3 bg-gray-200 dark:bg-gray-700 hover:shadow transition-all duration-150 hover:scale-110 text-gray-500 dark:text-gray-400"
+                                    aria-label="Archive this book"
+                                >
+                                    <ArchiveIcon className="w-8 h-8" />
+                                </Link>
+                                {/* 
+                                TODO: Add this icon back once we implement DELETE functionality
+                                <button
+                                    className="rounded-full p-3 bg-gray-200 dark:bg-gray-700 hover:shadow transition-all duration-150 hover:scale-110 text-red-600"
+                                    aria-label="Delete this book"
+                                >
+                                    <TrashIcon className="w-8 h-8" />
+                                </button> */}
+                            </div>
+                        </div>
+                        <div className="w-full">
                             <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">{data.book.title}</h2>
                             <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300">
-                                by {data.book.author}
+                                {data.book.author}
                             </h3>
                             <dl>
                                 <BookDetailsItem
@@ -75,7 +100,7 @@ export default function BookDetail() {
                                             <span className="font-normal text-xs">
                                                 (calculated{" "}
                                                 {formatDistance(
-                                                    new Date(data.book.dailyTargets[0].calcTime),
+                                                    new Date(data.book.goal_targetCalculatedAt),
                                                     new Date(),
                                                     {
                                                         addSuffix: true,
@@ -88,8 +113,7 @@ export default function BookDetail() {
                                     body={
                                         <>
                                             {getStatusDetails(data.book)[0]} (
-                                            {Math.max(data.book.dailyTargets[0].targetPage - data.book.currentPage, 0)}{" "}
-                                            more pages)
+                                            {Math.max(data.book.goal_targetPage - data.book.currentPage, 0)} more pages)
                                         </>
                                     }
                                 />
@@ -104,10 +128,6 @@ export default function BookDetail() {
                                     body={new Date(data.book.targetDate).toLocaleDateString()}
                                 />
                             </dl>
-                            <div className="w-full flex justify-center gap-2 mt-12">
-                                <ButtonLink to="update-goal">Change Target Date</ButtonLink>
-                                <ButtonLink to="update-page">Update Progress</ButtonLink>
-                            </div>
                         </div>
                     </div>
                     <div className="mt-12 lg:mt-0">
