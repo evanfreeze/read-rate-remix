@@ -5,5 +5,5 @@ interface Props extends AllHTMLAttributes<HTMLInputElement> {
 }
 
 export function FormInput({ className = "", ...others }: Props) {
-    return <input {...others} className={`p-2 rounded-md border ${className}`} />;
+    return <input {...others} className={`p-2 rounded-md border dark:border-gray-700 dark:bg-gray-900 ${className}`} />;
 }

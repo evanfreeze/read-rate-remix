@@ -10,7 +10,7 @@ export default function FormSubmitButton({ children, className = "", ...others }
         <button
             type="submit"
             {...others}
-            className={`border w-full py-2 text-lg font-bold rounded-xl transition-all duration-150 text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-gray-300 hover:text-gray-100 hover:bg-blue-500 ${className}`}
+            className={`w-full py-2 text-lg font-bold rounded-xl transition-all duration-150 text-gray-700 bg-gray-200 dark:bg-gray-700 dark:text-gray-300 hover:text-gray-100 hover:bg-blue-500 ${className}`}
         >
             {children}
         </button>
