@@ -97,23 +97,28 @@ export default function BookDetail() {
                                     title={
                                         <>
                                             Today's Goal{" "}
-                                            <span className="font-normal text-xs">
-                                                (calculated{" "}
-                                                {formatDistance(
-                                                    new Date(data.book.goal_targetCalculatedAt),
-                                                    new Date(),
-                                                    {
-                                                        addSuffix: true,
-                                                    },
-                                                )}
-                                                )
-                                            </span>
+                                            {data.book.goal_targetCalculatedAt ? (
+                                                <span className="font-normal text-xs">
+                                                    (calculated{" "}
+                                                    {formatDistance(
+                                                        new Date(data.book.goal_targetCalculatedAt),
+                                                        new Date(),
+                                                        {
+                                                            addSuffix: true,
+                                                        },
+                                                    )}
+                                                    )
+                                                </span>
+                                            ) : (
+                                                <span>(not yet calculated)</span>
+                                            )}
                                         </>
                                     }
                                     body={
                                         <>
                                             {getStatusDetails(data.book)[0]} (
-                                            {Math.max(data.book.goal_targetPage - data.book.currentPage, 0)} more pages)
+                                            {Math.max((data.book.goal_targetPage ?? 0) - data.book.currentPage, 0)} more
+                                            pages)
                                         </>
                                     }
                                 />

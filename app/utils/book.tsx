@@ -10,7 +10,7 @@ export const GOLD = { h: "43deg", s: "96.4%", l: "56.3%" };
 export const GREEN = { h: "158deg", s: "64.4%", l: "51.6%" };
 
 export const getStatusDetails = (book: Book): [string, HSLColor, React.ReactNode] => {
-    const targetPage = book.goal_targetPage;
+    const targetPage = book.goal_targetPage ?? 0;
     if (book.currentPage === book.pageCount) {
         return ["You've completed the book — congrats!", GOLD, <StarIcon className="w-10 h-10" />];
     }
@@ -28,6 +28,7 @@ export function convertBrowserZonedDateToUTC(browserDate: string, tzOffsetMin: s
 export function shouldUpdateDailyTarget(book: Book) {
     return (
         !book.goal_targetPage ||
+        !book.goal_targetCalculatedAt ||
         !isToday(book.goal_targetCalculatedAt) ||
         String(book.targetDate) !== String(book.goal_snapshot_targetDate)
     );
