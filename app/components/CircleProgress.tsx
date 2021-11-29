@@ -32,6 +32,9 @@ export default function CircleProgress({
                     }}
                 />
                 <circle
+                    // transform rotate has to be something not evenly divisible by 90 because of a weird safari issue
+                    // https://stackoverflow.com/questions/40363916/svg-transform-rotate-by-90-180-or-270-degrees-not-working-on-circle-in-safari-i
+                    transform="rotate(-90.01 25 25)"
                     cx={diameter / 2}
                     cy={diameter / 2}
                     r={radius}
