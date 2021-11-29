@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "remix-app-template",
+    "name": "read-rate-remix",
     "description": "",
     "license": "",
     "scripts": {
@@ -8,14 +8,14 @@
         "build:css": "tailwindcss -o ./app/styles/tailwind.css",
         "dev": "concurrently \"npm run dev:css\" \"node -r dotenv/config node_modules/.bin/remix dev\"",
         "dev:css": "tailwindcss -o ./app/styles/tailwind.css --watch",
-        "postinstall": "remix setup node",
-        "start": "remix-serve build"
+        "postinstall": "remix setup node"
     },
     "dependencies": {
         "@heroicons/react": "^1.0.5",
         "@prisma/client": "^3.5.0",
         "@remix-run/react": "^1.0.6",
         "@remix-run/serve": "^1.0.6",
+        "@remix-run/vercel": "^1.0.6",
         "bcrypt": "^5.0.1",
         "date-fns": "^2.26.0",
         "dotenv": "^10.0.0",
