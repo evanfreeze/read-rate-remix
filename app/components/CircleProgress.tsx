@@ -18,7 +18,7 @@ export default function CircleProgress({
     const position = Math.max(1 - Math.max(progress, 0.01), 0);
 
     return (
-        <div className="flex items-center justify-center">
+        <div className="relative">
             <svg viewBox="0 0 50 50" transform="rotate(-90)">
                 <circle
                     cx={diameter / 2}
@@ -47,7 +47,7 @@ export default function CircleProgress({
             </svg>
             {children && (
                 <span
-                    className="absolute text-2xl font-bold"
+                    className="text-2xl font-bold w-full h-full absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center"
                     style={{ color: `hsl(${color.h}, ${color.s}, ${color.l})` }}
                 >
                     {children}
