@@ -19,7 +19,7 @@ export default function CircleProgress({
 
     return (
         <div className="relative">
-            <svg viewBox="0 0 50 50" transform="rotate(-90)">
+            <svg viewBox="0 0 50 50">
                 <circle
                     cx={diameter / 2}
                     cy={diameter / 2}
