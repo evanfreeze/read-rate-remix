@@ -38,11 +38,11 @@ model Book {
   completedAt               DateTime?
   deletedAt                 DateTime?
   coverUrl                  String?
-  goal_targetPage           Int?
-  goal_targetCalculatedAt   DateTime?
-  goal_snapshot_pageCount   Int?
-  goal_snapshot_currentPage Int?
-  goal_snapshot_targetDate  DateTime?
+  goal_targetPage           Int
+  goal_targetCalculatedAt   DateTime
+  goal_snapshot_pageCount   Int
+  goal_snapshot_currentPage Int
+  goal_snapshot_targetDate  DateTime
   goal_snapshot_rateGoal    Int?
-  goal_snapshot_mode        String?
+  goal_snapshot_mode        String
 }
