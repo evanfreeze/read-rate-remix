@@ -34,6 +34,7 @@ export const links: LinksFunction = () => {
 
 type LoaderData = {
     user: User | null;
+    environment: string;
 };
 
 export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> => {
@@ -44,7 +45,10 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
         user = await getUser(request);
     }
 
-    return { user };
+    return {
+        user,
+        environment: String(process.env.VERCEL_ENV),
+    };
 };
 
 export default function App() {
@@ -124,7 +128,7 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-    const data = useLoaderData<LoaderData>();
+    const data = useLoaderData<LoaderData | undefined>();
     const location = useLocation();
 
     return (
@@ -137,6 +141,15 @@ function Layout({ children }: { children: React.ReactNode }) {
                             <Link to="/" title="Read Rate">
                                 <h1 className="text-5xl font-bold dark:text-gray-100">Read Rate</h1>
                             </Link>
+                            {data?.environment !== "production" ? (
+                                <div
+                                    className={`${
+                                        data?.environment === "development" ? "bg-yellow-600" : "bg-purple-800"
+                                    } rounded-lg px-2 py-1 relative top-0.5 ml-1`}
+                                >
+                                    <span className="text-white text-sm font-bold uppercase">{data?.environment}</span>
+                                </div>
+                            ) : null}
                         </div>
                         {data?.user ? (
                             <div className="flex gap-6 items-center justify-between w-full md:w-auto">
