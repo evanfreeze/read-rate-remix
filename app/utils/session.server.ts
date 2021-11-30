@@ -44,7 +44,7 @@ if (!sessionSecret) {
 const storage = createCookieSessionStorage({
     cookie: {
         name: "rr_app_session",
-        secure: true,
+        secure: process.env.VERCEL_ENV === "development" ? false : true,
         secrets: [sessionSecret],
         sameSite: "lax",
         path: "/",
