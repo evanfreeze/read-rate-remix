@@ -9,6 +9,7 @@ import React from "react";
 import FormErrorMessage from "~/components/FormErrorMessage";
 import { Book } from ".prisma/client";
 import BackToNowReading from "../components/BackToNowReading";
+import { ExclamationIcon } from "@heroicons/react/solid";
 
 type LoaderData = {
     book: Book | null;
@@ -25,6 +26,8 @@ export const loader: LoaderFunction = async ({ request, params }): Promise<Loade
 
 export default function BookDetail() {
     const data = useLoaderData<LoaderData | undefined>();
+
+    const remainingPagesToday = Math.max((data?.book?.goal_targetPage ?? 0) - (data?.book?.currentPage ?? 0), 0);
 
     return (
         <div>
@@ -116,9 +119,8 @@ export default function BookDetail() {
                                     }
                                     body={
                                         <>
-                                            {getStatusDetails(data.book)[0]} (
-                                            {Math.max((data.book.goal_targetPage ?? 0) - data.book.currentPage, 0)} more
-                                            pages)
+                                            {getStatusDetails(data.book)[0]}{" "}
+                                            {remainingPagesToday > 0 ? <>({remainingPagesToday} more pages)</> : null}
                                         </>
                                     }
                                 />
@@ -129,8 +131,25 @@ export default function BookDetail() {
                                     })}
                                 />
                                 <BookDetailsItem
-                                    title="Target Date"
-                                    body={new Date(data.book.targetDate).toLocaleDateString()}
+                                    title={
+                                        <div className="flex gap-2.5 items-center">
+                                            <span>Target Date</span>
+                                            {new Date(data.book.targetDate) < new Date() &&
+                                            data.book.currentPage < data.book.pageCount ? (
+                                                <div className="flex gap-0.5 items-center">
+                                                    <ExclamationIcon className="w-4 h-4 text-yellow-600 relative top-0.5" />
+                                                    <span className="text-yellow-500 font-normal text-sm">
+                                                        Target date has passed
+                                                    </span>
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                    }
+                                    body={
+                                        <div>
+                                            <span>{new Date(data.book.targetDate).toLocaleDateString()}</span>
+                                        </div>
+                                    }
                                 />
                             </dl>
                         </div>
