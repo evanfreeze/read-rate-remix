@@ -53,7 +53,7 @@ export const loader: LoaderFunction = async ({ request }): Promise<LoaderData> =
 
 export default function App() {
     return (
-        <Document>
+        <Document title="Read Rate">
             <Layout>
                 <Outlet />
             </Layout>
